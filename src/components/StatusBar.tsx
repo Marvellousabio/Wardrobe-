@@ -1,11 +1,18 @@
 import React from 'react';
 
+interface WeatherData {
+  temp: number;
+  condition: string;
+  description: string;
+  icon: string;
+}
+
 interface StatusBarProps {
   wardrobeCount: number;
   eventsCount: number;
   outfitsCount: number;
   favoritesCount: number;
-  weather: { temp: number; condition: string };
+  weather: WeatherData;
   darkMode: boolean;
 }
 
@@ -28,7 +35,14 @@ const StatusBar: React.FC<StatusBarProps> = ({
         <span>Events: {eventsCount}</span>
         <span>Outfits: {outfitsCount}</span>
         <span>Favorites: {favoritesCount}</span>
-        <span>Weather: {weather.temp}°F {weather.condition}</span>
+        <span className="flex items-center gap-1">
+          <img
+            src={`https://openweathermap.org/img/wn/${weather.icon}.png`}
+            alt={weather.description}
+            className="w-4 h-4"
+          />
+          {weather.temp}°F {weather.condition}
+        </span>
       </div>
     </div>
   );

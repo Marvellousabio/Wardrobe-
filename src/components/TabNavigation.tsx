@@ -7,7 +7,7 @@ interface TabNavigationProps {
 }
 
 const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, setActiveTab, darkMode }) => {
-  const tabs = ['scanner', 'wardrobe', 'events', 'outfits'];
+  const tabs = ['scanner', 'wardrobe', 'events', 'outfits', 'settings'];
 
   return (
     <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-lg p-2 mb-6 flex gap-2`}>

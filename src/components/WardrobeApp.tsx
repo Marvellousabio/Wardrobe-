@@ -8,7 +8,14 @@ import ScannerTab from './ScannerTab';
 import WardrobeTab from './WardrobeTab';
 import EventsTab from './EventsTab';
 import OutfitsTab from './OutfitsTab';
+import SettingsTab from './SettingsTab';
+import Onboarding from './Onboarding';
 import Footer from './Footer';
+import { useFirestore } from '@/hooks/useFirestore';
+import { getCurrentWeather, WeatherData } from '@/lib/weather';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from '@/lib/firebase';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ClothingItem {
   id: number;
@@ -36,50 +43,43 @@ interface Outfit {
 
 const WardrobeApp = () => {
   const [activeTab, setActiveTab] = useState('scanner');
-  const [wardrobe, setWardrobe] = useState<ClothingItem[]>([]);
-  const [events, setEvents] = useState<Event[]>([]);
-  const [generatedOutfits, setGeneratedOutfits] = useState<Outfit[]>([]);
-  const [favorites, setFavorites] = useState<Outfit[]>([]);
   const [scanning, setScanning] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [weather, setWeather] = useState({ temp: 75, condition: 'Sunny' });
+  const [weather, setWeather] = useState<WeatherData>({ temp: 75, condition: 'Sunny', description: 'clear sky', icon: '01d' });
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
-  // Load data from localStorage on mount
+  const { user } = useAuth();
+  const { data, loading, updateData } = useFirestore();
+
+  // Check if onboarding is needed
   useEffect(() => {
-    const savedWardrobe = localStorage.getItem('wardrobe');
-    const savedEvents = localStorage.getItem('events');
-    const savedOutfits = localStorage.getItem('generatedOutfits');
-    const savedFavorites = localStorage.getItem('favorites');
-    const savedDarkMode = localStorage.getItem('darkMode');
+    if (data && !data.onboardingCompleted) {
+      setShowOnboarding(true);
+    }
+  }, [data]);
 
-    if (savedWardrobe) setWardrobe(JSON.parse(savedWardrobe));
-    if (savedEvents) setEvents(JSON.parse(savedEvents));
-    if (savedOutfits) setGeneratedOutfits(JSON.parse(savedOutfits));
-    if (savedFavorites) setFavorites(JSON.parse(savedFavorites));
-    if (savedDarkMode) setDarkMode(JSON.parse(savedDarkMode));
+  const wardrobe = data?.wardrobe || [];
+  const events = data?.events || [];
+  const generatedOutfits = data?.generatedOutfits || [];
+  const favorites = data?.favorites || [];
+  const darkMode = data?.darkMode || false;
+
+  // Fetch weather on mount
+  useEffect(() => {
+    const fetchWeather = async () => {
+      const weatherData = await getCurrentWeather();
+      setWeather(weatherData);
+    };
+    fetchWeather();
   }, []);
 
-  // Save to localStorage whenever data changes
-  useEffect(() => {
-    localStorage.setItem('wardrobe', JSON.stringify(wardrobe));
-  }, [wardrobe]);
-
-  useEffect(() => {
-    localStorage.setItem('events', JSON.stringify(events));
-  }, [events]);
-
-  useEffect(() => {
-    localStorage.setItem('generatedOutfits', JSON.stringify(generatedOutfits));
-  }, [generatedOutfits]);
-
-  useEffect(() => {
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-  }, [favorites]);
-
-  useEffect(() => {
-    localStorage.setItem('darkMode', JSON.stringify(darkMode));
-  }, [darkMode]);
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl">Loading your wardrobe...</div>
+      </div>
+    );
+  }
 
   // Sample clothing items database
   const clothingDatabase: ClothingItem[] = [
@@ -95,12 +95,31 @@ const WardrobeApp = () => {
 
 
   // Handle file upload and simulate scanning
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
+    if (file && user) {
       setSelectedFile(file);
       setScanning(true);
-      setTimeout(() => {
+
+      try {
+        // Upload to Firebase Storage
+        const storageRef = ref(storage, `users/${user.uid}/wardrobe/${Date.now()}_${file.name}`);
+        await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(storageRef);
+
+        // Simulate AI processing delay
+        setTimeout(() => {
+          const randomItems = clothingDatabase
+            .sort(() => 0.5 - Math.random())
+            .slice(0, Math.floor(Math.random() * 3) + 2)
+            .map(item => ({ ...item, image: downloadURL }));
+          updateData({ wardrobe: [...wardrobe, ...randomItems] });
+          setScanning(false);
+          setSelectedFile(null);
+        }, 2000);
+      } catch (error) {
+        console.error('Upload error:', error);
+        // Fallback to base64 if upload fails
         const reader = new FileReader();
         reader.onload = (e) => {
           const image = e.target?.result as string;
@@ -108,12 +127,12 @@ const WardrobeApp = () => {
             .sort(() => 0.5 - Math.random())
             .slice(0, Math.floor(Math.random() * 3) + 2)
             .map(item => ({ ...item, image }));
-          setWardrobe([...wardrobe, ...randomItems]);
+          updateData({ wardrobe: [...wardrobe, ...randomItems] });
           setScanning(false);
           setSelectedFile(null);
         };
         reader.readAsDataURL(file);
-      }, 2000);
+      }
     }
   };
 
@@ -165,24 +184,43 @@ const WardrobeApp = () => {
       occasion,
       date: new Date().toLocaleDateString(),
     };
-    setEvents([...events, newEvent]);
+    updateData({ events: [...events, newEvent] });
   };
 
   const generateOutfitsForEvent = (occasion: string) => {
     const outfits = generateOutfits(occasion, 'sunny');
-    setGeneratedOutfits(outfits);
+    updateData({ generatedOutfits: outfits });
     setActiveTab('outfits');
   };
 
   const saveToFavorites = (outfit: Outfit) => {
     if (!favorites.find(fav => fav.id === outfit.id)) {
-      setFavorites([...favorites, outfit]);
+      updateData({ favorites: [...favorites, outfit] });
     }
   };
 
+  const setDarkMode = (mode: boolean) => {
+    updateData({ darkMode: mode });
+  };
+
+  const handleImportData = (importedData: any) => {
+    if (importedData.wardrobe) updateData({ wardrobe: importedData.wardrobe });
+    if (importedData.events) updateData({ events: importedData.events });
+    if (importedData.favorites) updateData({ favorites: importedData.favorites });
+  };
+
+  const completeOnboarding = () => {
+    setShowOnboarding(false);
+    updateData({ onboardingCompleted: true });
+  };
+
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-purple-50 text-gray-900'} p-6`}>
-      <div className="max-w-6xl mx-auto">
+    <>
+      {showOnboarding && (
+        <Onboarding onComplete={completeOnboarding} darkMode={darkMode} />
+      )}
+      <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gradient-to-br from-blue-50 to-purple-50 text-gray-900'} p-6`}>
+        <div className="max-w-6xl mx-auto">
         <Header darkMode={darkMode} setDarkMode={setDarkMode} />
 
         <StatusBar
@@ -230,11 +268,24 @@ const WardrobeApp = () => {
               darkMode={darkMode}
             />
           )}
+
+          {activeTab === 'settings' && (
+            <SettingsTab
+              darkMode={darkMode}
+              setDarkMode={setDarkMode}
+              wardrobe={wardrobe}
+              events={events}
+              favorites={favorites}
+              onImportData={handleImportData}
+              darkModeEnabled={darkMode}
+            />
+          )}
         </div>
 
         <Footer />
       </div>
     </div>
+    </>
   );
 };
 
