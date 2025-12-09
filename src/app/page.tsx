@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/contexts/AuthContext';
-import Auth from '@/components/Auth';
-import WardrobeApp from '@/components/WardrobeApp';
+import { useAuth } from "@/contexts/AuthContext";
+import Auth from "@/components/Auth";
+import WardrobeApp from "@/components/WardrobeApp";
 
 export default function Home() {
   const { user, loading } = useAuth();

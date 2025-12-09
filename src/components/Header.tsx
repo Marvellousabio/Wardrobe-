@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import React from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface HeaderProps {
   darkMode: boolean;
@@ -15,29 +15,27 @@ const Header: React.FC<HeaderProps> = ({ darkMode, setDarkMode }) => {
     try {
       await logout();
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   };
 
   return (
     <div className="flex justify-between items-center mb-8">
       <div>
-        <h1 className="text-4xl font-bold mb-2">Digital Wardrobe & Outfit Planner</h1>
-        <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        <h1 className="text-4xl font-bold mb-2">
+          Digital Wardrobe & Outfit Planner
+        </h1>
+        <p className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}>
           AI-powered outfit recommendations based on weather and occasion
         </p>
-        {user && (
-          <p className="text-sm mt-1">
-            Welcome, {user.email}
-          </p>
-        )}
+        {user && <p className="text-sm mt-1">Welcome, {user.email}</p>}
       </div>
       <div className="flex gap-2">
         <button
           onClick={() => setDarkMode(!darkMode)}
-          className={`px-4 py-2 rounded-lg ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-lg`}
+          className={`px-4 py-2 rounded-lg ${darkMode ? "bg-gray-800" : "bg-white"} shadow-lg`}
         >
-          {darkMode ? '☀️' : '🌙'} Mode
+          {darkMode ? "☀️" : "🌙"} Mode
         </button>
         {user && (
           <button

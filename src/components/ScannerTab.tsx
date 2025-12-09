@@ -1,5 +1,5 @@
-import React from 'react';
-import { Camera, Zap } from 'lucide-react';
+import React from "react";
+import { Camera, Zap } from "lucide-react";
 
 interface ScannerTabProps {
   scanning: boolean;
@@ -12,13 +12,13 @@ const ScannerTab: React.FC<ScannerTabProps> = ({
   scanning,
   selectedFile,
   onFileUpload,
-  darkMode
+  darkMode,
 }) => {
   return (
     <div className="text-center">
       <Camera className="w-20 h-20 mx-auto mb-4 text-blue-500" />
       <h2 className="text-2xl font-bold mb-4">Photo Upload Scanner</h2>
-      <p className={`mb-6 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+      <p className={`mb-6 ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
         Upload photos of your clothing items for AI analysis and categorization
       </p>
 
@@ -58,9 +58,14 @@ const ScannerTab: React.FC<ScannerTabProps> = ({
       {scanning && (
         <div className="mt-8">
           <div className="w-full bg-gray-200 rounded-full h-3 mb-2 overflow-hidden">
-            <div className="bg-blue-500 h-3 rounded-full animate-pulse" style={{width: '70%'}}></div>
+            <div
+              className="bg-blue-500 h-3 rounded-full animate-pulse"
+              style={{ width: "70%" }}
+            ></div>
           </div>
-          <p className="text-sm text-gray-500">AI analyzing clothing items...</p>
+          <p className="text-sm text-gray-500">
+            AI analyzing clothing items...
+          </p>
         </div>
       )}
     </div>

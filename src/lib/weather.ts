@@ -5,7 +5,10 @@ export interface WeatherData {
   icon: string;
 }
 
-export const getCurrentWeather = async (lat: number = 40.7128, lon: number = -74.0060): Promise<WeatherData> => {
+export const getCurrentWeather = async (
+  lat: number = 40.7128,
+  lon: number = -74.006,
+): Promise<WeatherData> => {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
@@ -13,7 +16,7 @@ export const getCurrentWeather = async (lat: number = 40.7128, lon: number = -74
     const response = await fetch(`/api/weather?lat=${lat}&lon=${lon}`, {
       signal: controller.signal,
       headers: {
-        'Accept': 'application/json',
+        Accept: "application/json",
       },
     });
 
@@ -26,13 +29,13 @@ export const getCurrentWeather = async (lat: number = 40.7128, lon: number = -74
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Weather API error:', error);
+    console.error("Weather API error:", error);
     // Return fallback data
     return {
       temp: 75,
-      condition: 'Sunny',
-      description: 'clear sky',
-      icon: '01d'
+      condition: "Sunny",
+      description: "clear sky",
+      icon: "01d",
     };
   }
 };

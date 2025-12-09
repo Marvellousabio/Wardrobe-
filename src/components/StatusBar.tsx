@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface WeatherData {
   temp: number;
@@ -22,10 +22,12 @@ const StatusBar: React.FC<StatusBarProps> = ({
   outfitsCount,
   favoritesCount,
   weather,
-  darkMode
+  darkMode,
 }) => {
   return (
-    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-lg p-4 mb-6 flex items-center justify-between`}>
+    <div
+      className={`${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg shadow-lg p-4 mb-6 flex items-center justify-between`}
+    >
       <div className="flex items-center gap-2">
         <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
         <span className="font-semibold">Online Mode Active</span>

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import React, { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface SettingsTabProps {
   darkMode: boolean;
@@ -23,7 +23,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
 }) => {
   const { user } = useAuth();
   const [notifications, setNotifications] = useState(false);
-  const [displayName, setDisplayName] = useState(user?.displayName || '');
+  const [displayName, setDisplayName] = useState(user?.displayName || "");
 
   const exportData = () => {
     const data = {
@@ -32,11 +32,13 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
       favorites,
       exportedAt: new Date().toISOString(),
     };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'wardrobe-data.json';
+    a.download = "wardrobe-data.json";
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -49,9 +51,9 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
         try {
           const data = JSON.parse(e.target?.result as string);
           onImportData(data);
-          alert('Data imported successfully!');
+          alert("Data imported successfully!");
         } catch (error) {
-          alert('Invalid file format');
+          alert("Invalid file format");
         }
       };
       reader.readAsText(file);
@@ -72,7 +74,9 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             className={`w-full px-3 py-2 rounded-lg border ${
-              darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'
+              darkMode
+                ? "bg-gray-700 border-gray-600 text-white"
+                : "bg-white border-gray-300"
             } focus:outline-none focus:ring-2 focus:ring-blue-500`}
             placeholder="Enter your display name"
           />
@@ -81,10 +85,12 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
           <label className="block text-sm font-medium mb-2">Email</label>
           <input
             type="email"
-            value={user?.email || ''}
+            value={user?.email || ""}
             disabled
             className={`w-full px-3 py-2 rounded-lg border ${
-              darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'
+              darkMode
+                ? "bg-gray-700 border-gray-600 text-white"
+                : "bg-white border-gray-300"
             } opacity-50 cursor-not-allowed`}
           />
         </div>
@@ -96,12 +102,12 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
           <button
             onClick={() => setDarkMode(!darkMode)}
             className={`w-12 h-6 rounded-full transition-colors ${
-              darkMode ? 'bg-blue-500' : 'bg-gray-300'
+              darkMode ? "bg-blue-500" : "bg-gray-300"
             }`}
           >
             <div
               className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                darkMode ? 'translate-x-6' : 'translate-x-0.5'
+                darkMode ? "translate-x-6" : "translate-x-0.5"
               }`}
             />
           </button>
@@ -112,12 +118,12 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
           <button
             onClick={() => setNotifications(!notifications)}
             className={`w-12 h-6 rounded-full transition-colors ${
-              notifications ? 'bg-blue-500' : 'bg-gray-300'
+              notifications ? "bg-blue-500" : "bg-gray-300"
             }`}
           >
             <div
               className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                notifications ? 'translate-x-6' : 'translate-x-0.5'
+                notifications ? "translate-x-6" : "translate-x-0.5"
               }`}
             />
           </button>
@@ -134,7 +140,9 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
             Export Data
           </button>
           <div>
-            <label className="block text-sm font-medium mb-2">Import Data</label>
+            <label className="block text-sm font-medium mb-2">
+              Import Data
+            </label>
             <input
               type="file"
               accept=".json"
@@ -151,8 +159,12 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
           <p>Version: 0.1.0</p>
           <p>Built with Next.js, React, and Firebase</p>
           <div className="flex gap-4 mt-4">
-            <a href="/privacy" className="text-blue-500 hover:underline">Privacy Policy</a>
-            <a href="/terms" className="text-blue-500 hover:underline">Terms of Service</a>
+            <a href="/privacy" className="text-blue-500 hover:underline">
+              Privacy Policy
+            </a>
+            <a href="/terms" className="text-blue-500 hover:underline">
+              Terms of Service
+            </a>
           </div>
         </div>
       </div>

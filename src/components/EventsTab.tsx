@@ -1,5 +1,5 @@
-import React from 'react';
-import { Calendar, Plus } from 'lucide-react';
+import React from "react";
+import { Calendar, Plus } from "lucide-react";
 
 interface Event {
   id: number;
@@ -19,7 +19,7 @@ const EventsTab: React.FC<EventsTabProps> = ({
   events,
   onAddEvent,
   onGenerateOutfits,
-  darkMode
+  darkMode,
 }) => {
   return (
     <div>
@@ -37,21 +37,23 @@ const EventsTab: React.FC<EventsTabProps> = ({
       {events.length === 0 ? (
         <div className="text-center py-12">
           <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-          <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+          <p className={darkMode ? "text-gray-400" : "text-gray-600"}>
             No events scheduled. Add events to generate outfit suggestions.
           </p>
         </div>
       ) : (
         <div className="space-y-4">
-          {events.map(event => (
+          {events.map((event) => (
             <div
               key={event.id}
-              className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} p-6 rounded-lg border ${darkMode ? 'border-gray-600' : 'border-gray-200'}`}
+              className={`${darkMode ? "bg-gray-700" : "bg-gray-50"} p-6 rounded-lg border ${darkMode ? "border-gray-600" : "border-gray-200"}`}
             >
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-xl font-semibold mb-1">{event.name}</h3>
-                  <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <p
+                    className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-600"}`}
+                  >
                     {event.date} • {event.occasion}
                   </p>
                 </div>

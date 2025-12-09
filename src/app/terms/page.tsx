@@ -8,25 +8,33 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold mb-3">Acceptance of Terms</h2>
             <p>
-              By accessing and using the Wardrobe App, you accept and agree to be bound by the terms
-              and provision of this agreement.
+              By accessing and using the Wardrobe App, you accept and agree to
+              be bound by the terms and provision of this agreement.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold mb-3">Use License</h2>
             <p>
-              Permission is granted to temporarily use the Wardrobe App for personal, non-commercial
-              transitory viewing only. This is the grant of a license, not a transfer of title.
+              Permission is granted to temporarily use the Wardrobe App for
+              personal, non-commercial transitory viewing only. This is the
+              grant of a license, not a transfer of title.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">User Responsibilities</h2>
+            <h2 className="text-xl font-semibold mb-3">
+              User Responsibilities
+            </h2>
             <ul className="list-disc list-inside space-y-2">
-              <li>Provide accurate and complete information when creating an account</li>
+              <li>
+                Provide accurate and complete information when creating an
+                account
+              </li>
               <li>Maintain the security of your password and account</li>
-              <li>Not use the service for any illegal or unauthorized purpose</li>
+              <li>
+                Not use the service for any illegal or unauthorized purpose
+              </li>
               <li>Respect the rights of other users</li>
             </ul>
           </section>
@@ -34,23 +42,26 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-semibold mb-3">Content</h2>
             <p>
-              Our service allows you to upload and store images and data related to your wardrobe.
-              You retain ownership of your content, but grant us a license to use it for providing the service.
+              Our service allows you to upload and store images and data related
+              to your wardrobe. You retain ownership of your content, but grant
+              us a license to use it for providing the service.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold mb-3">Termination</h2>
             <p>
-              We may terminate or suspend your account immediately, without prior notice or liability,
-              for any reason whatsoever, including without limitation if you breach the Terms.
+              We may terminate or suspend your account immediately, without
+              prior notice or liability, for any reason whatsoever, including
+              without limitation if you breach the Terms.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold mb-3">Contact Information</h2>
             <p>
-              If you have any questions about these Terms of Service, please contact us at support@wardrobeapp.com.
+              If you have any questions about these Terms of Service, please
+              contact us at support@wardrobeapp.com.
             </p>
           </section>
         </div>
