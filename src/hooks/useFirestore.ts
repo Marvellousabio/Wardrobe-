@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
-import { useAuth } from '@/contexts/AuthContext';
+import { useState, useEffect } from "react";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ClothingItem {
   id: number;
@@ -50,7 +50,7 @@ export const useFirestore = () => {
 
     const fetchData = async () => {
       try {
-        const docRef = doc(db, 'users', user.uid);
+        const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -68,7 +68,7 @@ export const useFirestore = () => {
           setData(defaultData);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -81,11 +81,11 @@ export const useFirestore = () => {
     if (!user) return;
 
     try {
-      const docRef = doc(db, 'users', user.uid);
+      const docRef = doc(db, "users", user.uid);
       await updateDoc(docRef, updates);
-      setData(prev => prev ? { ...prev, ...updates } : null);
+      setData((prev) => (prev ? { ...prev, ...updates } : null));
     } catch (error) {
-      console.error('Error updating data:', error);
+      console.error("Error updating data:", error);
     }
   };
 
